@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>mTLS Live / wire observatory</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="signal"></span><span>mTLS <strong>LIVE</strong></span><small>wire observatory</small></div>
+    <div class="top-actions"><span id="connection" class="status-dot offline">offline</span><button id="new-session" class="button accent">+ New capture</button></div>
+  </header>
+  <main class="shell">
+    <aside class="sidebar">
+      <div class="eyebrow">CAPTURE SESSIONS</div>
+      <div id="sessions" class="sessions"></div>
+      <div class="sidebar-note"><span class="lock">▣</span><div><b>Payload policy</b><p>Encrypted application data is retained as bytes. Decryption requires an explicitly authorized key log.</p></div></div>
+    </aside>
+    <section class="workspace">
+      <div class="hero"><div><div class="eyebrow">LIVE SESSION <span id="session-id">waiting</span></div><h1 id="session-title">Start a capture to observe the wire.</h1><p id="session-subtitle">The first observed packet may be DNS, TCP SYN, or a later TLS message.</p></div><div class="hero-actions"><button id="pause" class="button">Ⅱ Pause</button><a id="export" class="button" href="#" download="mtls-transcript.json">↓ Export</a></div></div>
+      <div class="stats"><div><span>STATUS</span><b id="stat-status">—</b></div><div><span>FIRST OBSERVED</span><b id="stat-first">—</b></div><div><span>EVENTS</span><b id="stat-events">0</b></div><div><span>PROTOCOL</span><b>mTLS / TLS 1.3</b></div></div>
+      <div class="grid">
+        <section class="panel trigger-panel"><div class="panel-head"><div><div class="eyebrow">REQUEST CONTEXT</div><h2>API trigger</h2></div><span class="chip" id="trigger-chip">unlinked</span></div><div id="trigger" class="trigger-empty">No API request has been attached.</div></section>
+        <section class="panel handshake-panel"><div class="panel-head"><div><div class="eyebrow">PROTOCOL STATE</div><h2>Handshake path</h2></div><span class="chip green">client auth</span></div><div id="handshake" class="handshake"></div></section>
+      </div>
+      <section class="panel transcript-panel"><div class="panel-head"><div><div class="eyebrow">PACKET TRANSCRIPT</div><h2>From first observation</h2></div><div class="legend"><span><i class="dot dns"></i>DNS</span><span><i class="dot tcp"></i>TCP</span><span><i class="dot tls"></i>TLS</span><span><i class="dot record"></i>record</span></div></div><div id="transcript" class="transcript"></div></section>
+    </section>
+  </main>
+  <dialog id="new-dialog"><form id="new-form"><div class="eyebrow">NEW CAPTURE</div><h2>Observe a flow</h2><div id="dialog-error" role="alert" style="color:#d96858;font-size:11px;min-height:18px"></div><label>Mode<select id="mode"><option value="demo">Demo transcript</option><option value="live">Live tshark capture</option></select></label><label>Interface<input id="interface" placeholder="eth0 (optional in demo mode)"></label><label>API route<input id="route" value="GET /v1/profile"></label><div class="dialog-actions"><button id="cancel-capture" type="button" class="button">Cancel</button><button id="start-capture" type="submit" class="button accent">Start capture</button></div></form></dialog>
+  <script src="/app.js"></script>
+</body>
+</html>
