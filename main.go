@@ -476,11 +476,26 @@ func streamSession(response http.ResponseWriter, request *http.Request, session 
 	}
 }
 
+func choosePort(requested string) string {
+	if requested == "" {
+		requested = "8787"
+	}
+	for _, candidate := range []string{requested, "8787", "8788", "8789", "8790"} {
+		listener, err := net.Listen("tcp", ":"+candidate)
+		if err == nil {
+			_ = listener.Close()
+			return candidate
+		}
+	}
+	return requested
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8787"
 	}
+	port = choosePort(port)
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/sessions", sessionsHandler)
 	mux.HandleFunc("/api/sessions/", sessionHandler)
